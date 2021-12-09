@@ -148,10 +148,10 @@ public class EaseyFileLoaderTest {
   private List<ExpectedFile> expectedMigrationFiles() {
 
     ArrayList<ExpectedFile> expectedFiles = new ArrayList<>();
-    for (String f : new String[] { "provenance.xml", "dataset.xml", "files.xml" }) {
+    for (String f : new String[] { "provenance.xml", "dataset.xml", "files.xml", "emd.xml" }) {
       ExpectedFile expectedFile = new ExpectedFile();
       expectedFile.setDoi(doi);
-      expectedFile.setExpected_path("migration/" + f);
+      expectedFile.setExpected_path("easy-migration/" + f);
       expectedFile.setAdded_during_migration(true);
       expectedFiles.add(expectedFile);
     }
@@ -162,7 +162,7 @@ public class EaseyFileLoaderTest {
 
     FedoraToBagCsv mockedCSV = createMock(FedoraToBagCsv.class);
     expect(mockedCSV.getComment()).andReturn(comment).anyTimes();
-    expect(mockedCSV.getType()).andReturn(type).anyTimes();
+    expect(mockedCSV.getTransformation()).andReturn(type).anyTimes();
     expect(mockedCSV.getDoi()).andReturn(doi).anyTimes();
     expect(mockedCSV.getDatasetId()).andReturn(datasetId).anyTimes();
     return mockedCSV;
