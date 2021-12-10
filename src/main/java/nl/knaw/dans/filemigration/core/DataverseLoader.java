@@ -42,6 +42,7 @@ public class DataverseLoader {
   }
 
   public void saveActual(ActualFile actual) {
+    log.trace(actual.toString());
       actualFileDAO.create(actual);
   }
 
@@ -69,7 +70,8 @@ public class DataverseLoader {
 
   private ActualFile toActual(FileMeta f, String doi) {
     DataFile dataFile = f.getDataFile();
-    String actual_path = f.getDirectoryLabel() + "/" + f.getLabel();
-    return new ActualFile(doi, actual_path, f.getVersion(),dataFile.getChecksum().getValue(), dataFile.getStorageIdentifier());
+    String label = f.getDirectoryLabel();
+    String path = label == null ? label + "/" : "";
+    return new ActualFile(doi, path + f.getLabel(), f.getVersion(),dataFile.getChecksum().getValue(), dataFile.getStorageIdentifier());
   }
 }
