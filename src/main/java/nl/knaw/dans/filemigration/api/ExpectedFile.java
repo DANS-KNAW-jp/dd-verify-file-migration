@@ -40,12 +40,12 @@ public class ExpectedFile {
         final String dvPath = dvPath(path);
 
         setDoi(doi);
-        setSha1_checksum(easyFile.getSha1checksum());
+        setSha1_checksum(easyFile.getSha1Checksum());
         setEasy_file_id(easyFile.getPid());
         setFs_rdb_path(easyFile.getPath());
         setExpected_path(dvPath);
-        setAccessibleTo(easyFile.getAccessible_to());
-        setVisibleTo(easyFile.getVisible_to());
+        setAccessibleTo(easyFile.getAccessibleTo());
+        setVisibleTo(easyFile.getVisibleTo());
         setAdded_during_migration(false);
         setRemoved_thumbnail(path.toLowerCase().matches(".*thumbnails/.*_small.(png|jpg|tiff)"));
         setRemoved_original_directory(removeOriginal);

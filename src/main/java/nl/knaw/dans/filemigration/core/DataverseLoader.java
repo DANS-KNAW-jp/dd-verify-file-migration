@@ -82,7 +82,7 @@ public class DataverseLoader {
         actualFile.setAccessibleTo(fileMeta.getRestricted(), datasetHasAccessRequestEnabled);
         Embargo embargo = f.getEmbargo();
         if (embargo != null)
-            actualFile.setEmbargo_date(embargo.getDateAvailable());
+            actualFile.setEmbargoDate(embargo.getDateAvailable());
         return actualFile;
     }
 }
