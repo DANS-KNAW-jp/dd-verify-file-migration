@@ -30,6 +30,7 @@ public class FileRights implements Serializable {
   private String accessibleTo;
   private String visibleTo;
   private String embargoDate;
+  private String publicationDate;
 
   public String getEmbargoDate() {
     return embargoDate;
@@ -38,6 +39,14 @@ public class FileRights implements Serializable {
   public void setEmbargoDate(@Nullable String dateAvailable) {
     if (!StringUtil.isEmpty(dateAvailable) && DateTime.now().compareTo(DateTime.parse(dateAvailable)) < 0)
       this.embargoDate = dateAvailable;
+  }
+
+  public String getPublicationDate() {
+    return publicationDate;
+  }
+
+  public void setPublicationDate(String publicationDate) {
+    this.publicationDate = publicationDate;
   }
 
   public String getAccessibleTo() {
@@ -96,6 +105,7 @@ public class FileRights implements Serializable {
             "accessibleTo='" + accessibleTo + '\'' +
             ", visibleTo='" + visibleTo + '\'' +
             ", embargoDate='" + embargoDate + '\'' +
+            ", creationDate='" + publicationDate + '\'' +
             '}';
   }
 
@@ -104,11 +114,11 @@ public class FileRights implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     FileRights that = (FileRights) o;
-    return Objects.equals(accessibleTo, that.accessibleTo) && Objects.equals(visibleTo, that.visibleTo) && Objects.equals(embargoDate, that.embargoDate);
+    return Objects.equals(accessibleTo, that.accessibleTo) && Objects.equals(visibleTo, that.visibleTo) && Objects.equals(embargoDate, that.embargoDate) && Objects.equals(publicationDate, that.publicationDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(accessibleTo, visibleTo, embargoDate);
+    return Objects.hash(accessibleTo, visibleTo, embargoDate, publicationDate);
   }
 }

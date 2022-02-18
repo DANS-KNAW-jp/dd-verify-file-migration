@@ -26,12 +26,10 @@ import nl.knaw.dans.lib.dataverse.ResultItemDeserializer;
 import nl.knaw.dans.lib.dataverse.model.dataset.MetadataField;
 import nl.knaw.dans.lib.dataverse.model.dataverse.DataverseItem;
 import nl.knaw.dans.lib.dataverse.model.search.ResultItem;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import org.dom4j.util.StringUtils;
+import org.hsqldb.lib.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +102,10 @@ public class VaultLoader extends ExpectedLoader {
 
   private void processBag(String uuid, String doi) {
     Map<String, FileRights> filesXml = readFileMeta(uuid);
-    FileRights defaultFileRights = readDefaultRights(uuid);
+    FileRights defaultFileRights = readDefaultRights(uuid); // publicationDate is DDM/creationDate
+    String publicationDate = readAmd(uuid);
+    if (!StringUtil.isEmpty(publicationDate))
+      defaultFileRights.setPublicationDate(publicationDate); // TODO unless ...
     readManifest(uuid).forEach(m -> createExpected(doi, m, filesXml, defaultFileRights));
     expectedMigrationFiles(doi, migrationFiles, defaultFileRights);
   }
@@ -153,6 +154,21 @@ public class VaultLoader extends ExpectedLoader {
     try {
       String xmlString = executeReq(new HttpGet(uri), true);
       return DatasetRightsHandler.parseRights(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private String readAmd(String uuid) {
+    URI uri = bagStoreBaseUri
+        .resolve("bags/")
+        .resolve(uuid+"/")
+        .resolve("metadata/")
+        .resolve("amd.xml");
+    try {
+      String xmlString = executeReq(new HttpGet(uri), true);
+      return AmdHandler.parseAmd(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
     }
     catch (IOException e) {
       throw new RuntimeException(e);

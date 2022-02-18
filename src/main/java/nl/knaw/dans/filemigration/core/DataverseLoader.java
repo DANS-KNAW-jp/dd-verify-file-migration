@@ -82,6 +82,7 @@ public class DataverseLoader {
         actual.setMajorVersionNr(dataset.getVersionNumber());
         actual.setMinorVersionNr(dataset.getVersionMinorNumber());
         actual.setCurator(getCitationDepositor(dataset, actual.getDoi()));
+        actual.setPublicationDate(null == dataset.getDistributionDate() ? "" : dataset.getDistributionDate()); // TODO DRAFTS/EMBARGOED?
         return actual;
     }
 

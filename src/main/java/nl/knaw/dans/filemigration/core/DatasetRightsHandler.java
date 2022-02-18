@@ -16,7 +16,6 @@
 
 package nl.knaw.dans.filemigration.core;
 
-import org.apache.http.client.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
 public class DatasetRightsHandler extends DefaultHandler {
 
@@ -53,6 +51,10 @@ public class DatasetRightsHandler extends DefaultHandler {
       String dateAvailable = chars.toString();
       if (DateTime.now().compareTo(DateTime.parse(dateAvailable)) < 0)
         defaultFileRights.setEmbargoDate(dateAvailable.trim());
+    }
+    else if ("created".equalsIgnoreCase(localName)) {
+      String dateCreated = chars.toString();
+        defaultFileRights.setPublicationDate(dateCreated.trim());
     }
   }
 
