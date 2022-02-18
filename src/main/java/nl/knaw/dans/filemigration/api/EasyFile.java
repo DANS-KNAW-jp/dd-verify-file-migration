@@ -84,6 +84,9 @@ public class EasyFile {
     @Column(name="creator_role",nullable = false)
     private String creatorRole = "";
 
+    @Column(nullable = false)
+    private String depositor = "";
+
     @Column(name="visible_to",nullable = false)
     private String visibleTo = "";
 
@@ -95,9 +98,20 @@ public class EasyFile {
 
     @Override
     public String toString() {
-        return "EasyFile{" + "pid='" + pid + '\'' + ", parent_sid='" + parentSid + '\'' + ", dataset_sid='" + datasetSid + '\'' + ", path='" + path + '\'' + ", filename='" + filename + '\''
-            + ", size=" + size + ", mimetype='" + mimetype + '\'' + ", creator_role='" + creatorRole + '\'' + ", visible_to='" + visibleTo + '\'' + ", accessible_to='" + accessibleTo + '\''
-            + ", sha1checksum='" + sha1Checksum + '\'' + '}';
+        return "EasyFile{" +
+                "pid='" + pid + '\'' +
+                ", parentSid='" + parentSid + '\'' +
+                ", datasetSid='" + datasetSid + '\'' +
+                ", path='" + path + '\'' +
+                ", filename='" + filename + '\'' +
+                ", size=" + size +
+                ", mimetype='" + mimetype + '\'' +
+                ", creatorRole='" + creatorRole + '\'' +
+                ", depositor='" + depositor + '\'' +
+                ", visibleTo='" + visibleTo + '\'' +
+                ", accessibleTo='" + accessibleTo + '\'' +
+                ", sha1Checksum='" + sha1Checksum + '\'' +
+                '}';
     }
 
     public String getSha1Checksum() {
@@ -106,6 +120,14 @@ public class EasyFile {
 
     public void setSha1Checksum(String sha1Checksum) {
         this.sha1Checksum = sha1Checksum;
+    }
+
+    public String getDepositor() {
+        return depositor;
+    }
+
+    public void setDepositor(String depositor) {
+        this.depositor = depositor;
     }
 
     public String getAccessibleTo() {
@@ -190,18 +212,14 @@ public class EasyFile {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         EasyFile easyFile = (EasyFile) o;
-        return size == easyFile.size && Objects.equals(pid, easyFile.pid) && Objects.equals(parentSid, easyFile.parentSid) && Objects.equals(datasetSid, easyFile.datasetSid) && Objects.equals(
-            path, easyFile.path) && Objects.equals(filename, easyFile.filename) && Objects.equals(mimetype, easyFile.mimetype) && Objects.equals(creatorRole, easyFile.creatorRole) && Objects.equals(
-                visibleTo, easyFile.visibleTo) && Objects.equals(accessibleTo, easyFile.accessibleTo) && Objects.equals(sha1Checksum, easyFile.sha1Checksum);
+        return size == easyFile.size && Objects.equals(pid, easyFile.pid) && Objects.equals(parentSid, easyFile.parentSid) && Objects.equals(datasetSid, easyFile.datasetSid) && Objects.equals(path, easyFile.path) && Objects.equals(filename, easyFile.filename) && Objects.equals(mimetype, easyFile.mimetype) && Objects.equals(creatorRole, easyFile.creatorRole) && Objects.equals(depositor, easyFile.depositor) && Objects.equals(visibleTo, easyFile.visibleTo) && Objects.equals(accessibleTo, easyFile.accessibleTo) && Objects.equals(sha1Checksum, easyFile.sha1Checksum);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pid, parentSid, datasetSid, path, filename, size, mimetype, creatorRole, visibleTo, accessibleTo, sha1Checksum);
+        return Objects.hash(pid, parentSid, datasetSid, path, filename, size, mimetype, creatorRole, depositor, visibleTo, accessibleTo, sha1Checksum);
     }
 }

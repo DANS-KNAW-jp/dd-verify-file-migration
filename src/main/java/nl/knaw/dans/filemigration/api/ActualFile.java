@@ -70,6 +70,12 @@ public class ActualFile {
   @Column(name="accessible_to")
   private String accessibleTo;
 
+  @Column(name="publication_date")
+  private String publicationDate;
+
+  @Column()
+  private String curator;
+
   @Nullable
   @Column(name="embargo_date")
   private String embargoDate;
@@ -114,6 +120,26 @@ public class ActualFile {
     this.sha1Checksum = sha1Checksum;
   }
 
+  public void setAccessibleTo(String accessibleTo) {
+    this.accessibleTo = accessibleTo;
+  }
+
+  public String getPublicationDate() {
+    return publicationDate;
+  }
+
+  public void setPublicationDate(String publicationDate) {
+    this.publicationDate = publicationDate;
+  }
+
+  public String getCurator() {
+    return curator;
+  }
+
+  public void setCurator(String curator) {
+    this.curator = curator;
+  }
+
   public String getAccessibleTo() {
     return accessibleTo;
   }
@@ -148,13 +174,15 @@ public class ActualFile {
   public String toString() {
     return "ActualFile{" +
             "doi='" + doi + '\'' +
-            ", actual_path='" + actualPath + '\'' +
-            ", major_version_nr=" + majorVersionNr +
-            ", minor_version_nr=" + minorVersionNr +
-            ", sha1_checksum='" + sha1Checksum + '\'' +
-            ", storage_id='" + storageId + '\'' +
+            ", actualPath='" + actualPath + '\'' +
+            ", majorVersionNr=" + majorVersionNr +
+            ", minorVersionNr=" + minorVersionNr +
+            ", sha1Checksum='" + sha1Checksum + '\'' +
+            ", storageId='" + storageId + '\'' +
             ", accessibleTo='" + accessibleTo + '\'' +
-            ", embargo_date='" + embargoDate + '\'' +
+            ", publicationDate='" + publicationDate + '\'' +
+            ", curator='" + curator + '\'' +
+            ", embargoDate='" + embargoDate + '\'' +
             '}';
   }
 
@@ -163,11 +191,11 @@ public class ActualFile {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     ActualFile that = (ActualFile) o;
-    return majorVersionNr == that.majorVersionNr && minorVersionNr == that.minorVersionNr && Objects.equals(doi, that.doi) && Objects.equals(actualPath, that.actualPath) && Objects.equals(sha1Checksum, that.sha1Checksum) && Objects.equals(storageId, that.storageId) && Objects.equals(accessibleTo, that.accessibleTo) && Objects.equals(embargoDate, that.embargoDate);
+    return majorVersionNr == that.majorVersionNr && minorVersionNr == that.minorVersionNr && Objects.equals(doi, that.doi) && Objects.equals(actualPath, that.actualPath) && Objects.equals(sha1Checksum, that.sha1Checksum) && Objects.equals(storageId, that.storageId) && Objects.equals(accessibleTo, that.accessibleTo) && Objects.equals(publicationDate, that.publicationDate) && Objects.equals(curator, that.curator) && Objects.equals(embargoDate, that.embargoDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(doi, actualPath, majorVersionNr, minorVersionNr, sha1Checksum, storageId, accessibleTo, embargoDate);
+    return Objects.hash(doi, actualPath, majorVersionNr, minorVersionNr, sha1Checksum, storageId, accessibleTo, publicationDate, curator, embargoDate);
   }
 }
