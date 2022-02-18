@@ -20,7 +20,6 @@ import nl.knaw.dans.filemigration.api.ActualFile;
 import nl.knaw.dans.filemigration.db.ActualFileDAO;
 import nl.knaw.dans.lib.dataverse.DataverseClient;
 import nl.knaw.dans.lib.dataverse.model.dataset.DatasetVersion;
-import nl.knaw.dans.lib.dataverse.model.dataset.MetadataBlock;
 import nl.knaw.dans.lib.dataverse.model.dataset.MetadataField;
 import nl.knaw.dans.lib.dataverse.model.dataset.SingleValueField;
 import nl.knaw.dans.lib.dataverse.model.file.DataFile;
@@ -31,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class DataverseLoader {
@@ -57,36 +55,44 @@ public class DataverseLoader {
         List<DatasetVersion> versions;
         try {
             versions = client.dataset(doi).getAllVersions().getData();
-        }
-        catch (UnrecognizedPropertyException e) {
+        } catch (UnrecognizedPropertyException e) {
             log.error("Skipping {} {}", doi, e.getMessage());
             return;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (e.getMessage().toLowerCase().contains("not found"))
                 log.error("{} {} {}", doi, e.getClass(), e.getMessage());
             else
                 log.error("Could not retrieve file metas for DOI: {}", doi, e);
             return;
         }
-        for (DatasetVersion v : versions) {
+        for (DatasetVersion dataset : versions) {
             int fileCount = 0;
-            for (FileMeta f : v.getFiles()) {
-                saveActual(toActual(f, doi, v));
+            for (FileMeta fileMeta : dataset.getFiles()) {
+                ActualFile actual = createActual(doi, dataset);
+                actual.setAccessibleTo(fileMeta.getRestricted(), dataset.isFileAccessRequest());
+                saveActual(fromFileMetadata(fileMeta, actual));
                 ++fileCount;
             }
-            log.info("Stored {} actual files for DOI {}, Version {}.{} State {}", fileCount, doi, v.getVersionNumber(), v.getVersionMinorNumber(), v.getVersionState());
+            log.info("Stored {} actual files for DOI {}, Version {}.{} State {}", fileCount, doi, dataset.getVersionNumber(), dataset.getVersionMinorNumber(), dataset.getVersionState());
         }
     }
 
-    private ActualFile toActual(FileMeta fileMeta, String doi, DatasetVersion v) {
-        DataFile f = fileMeta.getDataFile();
+    private ActualFile createActual(String doi, DatasetVersion dataset) {
+        ActualFile actual = new ActualFile(doi);
+        actual.setMajorVersionNr(dataset.getVersionNumber());
+        actual.setMinorVersionNr(dataset.getVersionMinorNumber());
+        actual.setCurator(getCitationDepositor(dataset, actual.getDoi()));
+        return actual;
+    }
+
+    private ActualFile fromFileMetadata(FileMeta fileMeta, ActualFile actualFile) {
+        DataFile dataFile = fileMeta.getDataFile();
         String dl = fileMeta.getDirectoryLabel();
         String actualPath = (dl == null ? "" : dl + "/") + fileMeta.getLabel();
-        ActualFile actualFile = new ActualFile(doi, actualPath, v.getVersionNumber(), v.getVersionMinorNumber(), f.getChecksum().getValue(), f.getStorageIdentifier());
-        actualFile.setAccessibleTo(fileMeta.getRestricted(), v.isFileAccessRequest());
-        actualFile.setCurator(getCitationDepositor(v, doi));
-        Embargo embargo = f.getEmbargo();
+        actualFile.setActualPath(actualPath);
+        actualFile.setSha1Checksum(dataFile.getChecksum().getValue());
+        actualFile.setStorageId(dataFile.getStorageIdentifier());
+        Embargo embargo = dataFile.getEmbargo();
         if (embargo != null)
             actualFile.setEmbargoDate(embargo.getDateAvailable());
         return actualFile;

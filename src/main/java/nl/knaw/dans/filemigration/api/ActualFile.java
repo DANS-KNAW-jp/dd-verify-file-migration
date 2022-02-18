@@ -34,13 +34,8 @@ public class ActualFile {
 
   public ActualFile() {}
 
-  public ActualFile(String doi, String actual_path, int major_version_nr, int minor_version_nr, String sha1_checksum, String storage_id) {
+  public ActualFile(String doi) {
     this.doi = doi;
-    this.actualPath = actual_path;
-    this.majorVersionNr = major_version_nr;
-    this.minorVersionNr = minor_version_nr;
-    this.sha1Checksum = sha1_checksum;
-    this.storageId = storage_id;
   }
   // most lengths from easy-dtap/provisioning/roles/easy-fs-rdb/templates/create-easy-db-tables.sql
   // doi length as in dd-dtap/shared-code/dataverse/scripts/database/create/create_v*.sql
