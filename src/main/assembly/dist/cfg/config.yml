@@ -42,6 +42,9 @@ easyDb:
   properties:
     hibernate.dialect: 'org.hibernate.dialect.PostgreSQL92Dialect'
     hibernate.hbm2ddl.auto: validate
+    hibernate.connection.initial_pool_size: 1
+    hibernate.connection.min_pool_size: 1
+    hibernate.connection.pool_size: 4
 
 #
 # for all load-from commands
